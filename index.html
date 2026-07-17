@@ -95,6 +95,11 @@
 
   .hero h2{font-size:clamp(2rem,6vw,3.2rem);color:var(--pink-deep);text-wrap:balance}
   .hero .sub{margin-top:14px;font-style:italic;color:#a34f6e;font-size:1.05rem}
+  .counter{margin-top:30px;display:inline-block;background:var(--cream);border:2px dashed var(--pink-mid);
+    border-radius:18px;padding:20px 38px;box-shadow:0 8px 20px rgba(179,18,79,.15)}
+  .count-big{font-size:2.6rem;color:var(--pink-hot);font-variant-numeric:tabular-nums}
+  .count-label{font-size:.95rem;color:#a34f6e;font-style:italic}
+  .count-small{font-size:.78rem;color:#c07b95;margin-top:6px;font-variant-numeric:tabular-nums}
   .ribbon{font-size:34px;margin-bottom:8px;display:inline-block;animation:sway 3s ease-in-out infinite}
   @keyframes sway{50%{transform:rotate(8deg)}}
 
@@ -289,6 +294,11 @@
     <span class="ribbon">🎀</span>
     <h2 class="script">hi my love 💗</h2>
     <p class="sub">I made this little corner of the internet just for you.<br>Everything here is yours — i love you. 🌷</p>
+    <div class="counter">
+      <div class="count-big script" id="daysCount">…</div>
+      <div class="count-label">days of loving you — and counting 💗</div>
+      <div class="count-small" id="detailCount"></div>
+    </div>
   </section>
 
   <div class="divider">✿ ❤ ✿</div>
@@ -515,6 +525,17 @@
   });
   audio.addEventListener('ended',()=>{ playBtn.textContent='▶'; cassette.classList.remove('playing'); });
 
+  // ---------- days counter ----------
+  const TOGETHER_SINCE = new Date(2023, 9, 19); // 19 October 2023
+  function updateCounter(){
+    const ms = Date.now() - TOGETHER_SINCE.getTime();
+    const days = Math.floor(ms/86400000);
+    const hrs = Math.floor(ms/3600000)%24, mins = Math.floor(ms/60000)%60, secs = Math.floor(ms/1000)%60;
+    document.getElementById('daysCount').textContent = days.toLocaleString();
+    document.getElementById('detailCount').textContent = `+ ${hrs}h ${mins}m ${secs}s… every second counts`;
+  }
+  updateCounter(); setInterval(updateCounter, 1000);
+
   // ---------- grand finale ----------
   const finaleBtn = document.getElementById('finaleBtn');
   finaleBtn.addEventListener('click',()=>{
@@ -528,8 +549,11 @@
     document.getElementById('yesResult').textContent = 'she said yes!!! best day ever 🎆💗🎉';
     yesBtn.textContent = 'YES 💍 (forever locked in)';
     yesBtn.disabled = true;
-    fetch('https://ntfy.sh/saud-love-2003',{method:'POST',body:'SHE SAID YES!!! 💍💗',headers:{'Title':'💍 SHE SAID YES!','Priority':'high'}}).catch(()=>{});
-    fetch('https://formsubmit.co/ajax/mrsnip111@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'💍 SHE SAID YES!',message:'She just pressed the YES button on your website! Best day ever 💗'})}).catch(()=>{});
+    fetch('https://ntfy.sh/saud-love-2003',{
+      method:'POST',
+      body:'SHE SAID YES!!! 💍💗 She just pressed the YES button on your website!',
+      headers:{'Title':'💍 SHE SAID YES!','Priority':'high','Tags':'ring,heart,tada'}
+    }).catch(()=>{});
   });
 
   // ---------- easter egg: click the ribbon 5 times ----------
